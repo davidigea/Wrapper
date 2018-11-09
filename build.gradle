@@ -1,0 +1,38 @@
+apply plugin: 'application'
+mainClassName = 'urlshortener.Application'
+
+buildscript {
+    ext {
+        springBootVersion = '2.0.5.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+// Enable Spring Boot helper tasks
+apply plugin: 'org.springframework.boot'
+
+// Enable the automatic management of some versions
+apply plugin: 'io.spring.dependency-management'
+
+// We are Java 8
+apply plugin: 'java'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j"
+    }
+}
+
+dependencies {
+    // Version is managed by io.spring.dependency-management
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile 'commons-validator:commons-validator:1.6'
+}

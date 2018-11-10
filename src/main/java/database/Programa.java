@@ -1,5 +1,7 @@
 package database;
 
+import java.util.LinkedList;
+
 /**
  * Clase que se corresponde con un programa que hay en el servidor de base de datos
  */
@@ -7,9 +9,9 @@ public class Programa {
     int numRegistro;
     String nombre;
     String tipo;
-    String cinta;
+    LinkedList<String> cinta;
 
-    public Programa(int numRegistro, String nombre, String tipo, String cinta) {
+    public Programa(int numRegistro, String nombre, String tipo, LinkedList<String> cinta) {
         this.numRegistro = numRegistro;
         this.nombre = nombre;
         this.tipo = tipo;
@@ -40,11 +42,11 @@ public class Programa {
         this.tipo = tipo;
     }
 
-    public String getCinta() {
+    public LinkedList<String> getCinta() {
         return cinta;
     }
 
-    public void setCinta(String cinta) {
+    public void setCinta(LinkedList<String> cinta) {
         this.cinta = cinta;
     }
 }

@@ -7,5 +7,5 @@ if (req.status == 200) {
     document.getElementById('numRegistros').innerHTML = texto;
 }
 else {
-    document.getElementById('numRegistros').innerHTML = "<p>ADIOS</p>"
+    alert("No ha sido posible recuperar el número de registros");
 }

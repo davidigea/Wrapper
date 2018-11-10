@@ -3,6 +3,7 @@ package database;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
 @RestController
@@ -29,7 +30,10 @@ public class Operaciones {
     public Programa datos(@PathVariable String nombre) throws Exception {
         s.acquire();
         s.release();
-        return new Programa(1, "Probando1", "Probando2","Probando3");
+        LinkedList<String> l = new LinkedList<String>();
+        l.add("D");
+        l.add("X");
+        return new Programa(1, "David", "Humano", l);
     }
 
     /**

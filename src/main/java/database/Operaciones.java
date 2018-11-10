@@ -45,6 +45,10 @@ public class Operaciones {
     public Cinta programas(@PathVariable String id) throws Exception {
         s.acquire();
         s.release();
-        return new Cinta("Prueba", null);
+        LinkedList<String> l = new LinkedList<String>();
+        l.add("Zelda");
+        l.add("Pokemon");
+        l.add("Resident Evil");
+        return new Cinta("Prueba", l);
     }
 }

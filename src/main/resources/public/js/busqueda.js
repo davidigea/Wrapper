@@ -27,40 +27,43 @@ function hacerBusqueda() {
         // La petición no ha tenido errores
         var res = JSON.parse(req.responseText);
 
+        // Ponemos "resultados de la búsqueda"
+        $("#cadenaResultados").html("<br><h5>Resultados de la búsqueda</h5>")
+
         if(opcion == "programa") {
             // Se hizo petición al endpoint de programa
-
-            // Creamos el div y lo mostramos
-            var texto =
-                "<br>\n" +
-                "<h5>Resultados de la búsqueda</h5>\n" +
-                presentacionPrograma(res);
-
             // Modificamos el contenido del div
-            $("#contenido").html(texto);
+            $("#contenido").html(presentacionPrograma(res));
         }
         else {
             // Se hizo petición al endpoint de cinta
-            // Generamos el html
-            var texto = "<div id=\"programas\" name=\"programas\" class=\"btn-group-vertical\" role=\"group\">\n";
-            for(i=0; i<res.programas.length; i++) {
-                // Variable auxiliar
-                var id_bt = "btn_" + i;
-                
-                // Generamos un botón
-                texto += "<button id=\""+ id_bt +"\" type=\"button\" class=\"btn btn-secondary\" onclick=\"mostrarPrograma(" + res.programas[i] + ")\">"+ res.programas[i] + "</button>";
+            // Borramos el contenido previo
+            $("#contenido").html("");
 
-                // Hay que registrar cada botón creado dinámicamente
-                $("div").on('click', "#" + id_bt, function(){
-                    console.log(i);
-                });
+            // Creamos un objeto contenedor de botones
+            var element = document.createElement("div");
+            element.id = "programas";
+            element.className = "btn-group-vertical";
+            element.role = "group";
+
+            // Lo añadimos al fichero
+            var foo = document.getElementById("contenido");
+            foo.appendChild(element);
+
+            // Añadimos los botones (programas)
+            for(i in res.programas) {
+                element = document.createElement("button");
+                element.type = "button";
+                element.className = "btn btn-secondary";
+                element.appendChild(document.createTextNode(res.programas[i])); // Ponemos el nombre como hijo
+                element.onclick = function() { // Note this is a function
+                   mostrarPrograma(res.programas[i]);
+                };
+
+                // Añadimos el botón al grupo de botones
+                var foo = document.getElementById("programas");
+                foo.appendChild(element);
             }
-            texto +=
-                "</div>\n" +
-                "<div id=\"infoPrograma\" name=\"infoPrograma\"></div>";
-
-            // Modificamos el contenido del div
-            $("#contenido").html(texto);
         }
     }
     // Si devolvemos false no reenviará el formulario
@@ -79,7 +82,7 @@ function presentacionPrograma(res) {
 
     // Creamos el resto del string
     var texto =
-        "<div class=\"col-md-3\">\n" +
+        "<div id=\"infoPrograma\"class=\"col-md-3\">\n" +
         "        <ul class=\"list-group ticketView\">\n" +
         "            <li class=\"list-group-item ticketView\">\n" +
         "                <span class=\"badge pull-left\" style=\"width:50%;\">Nº Registro</span>\n" +
@@ -112,11 +115,15 @@ function mostrarPrograma(nombre) {
 
     // Comprobamos que la petición sea correcta
     if(req.status == 200) {
+        // Eliminamos contenido previo
+        // P.ej, datos de programa que estaban por click anterior
+        $("#infoPrograma").remove();
+
         // Cogemos el cuerpo de la petición
         var res = JSON.parse(req.responseText);
 
         // Insertamos el html
-        document.getElementById('infoPrograma').innerHTML = presentacionPrograma(res);
+        $("#contenido").append(presentacionPrograma(res));
     }
     else {
         alert("error");

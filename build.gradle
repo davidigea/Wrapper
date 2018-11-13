@@ -1,5 +1,5 @@
 apply plugin: 'application'
-mainClassName = 'urlshortener.Application'
+mainClassName = 'database.Application'
 
 buildscript {
     ext {
@@ -19,6 +19,9 @@ apply plugin: 'org.springframework.boot'
 // Enable the automatic management of some versions
 apply plugin: 'io.spring.dependency-management'
 
+// Hacemos que intellij lea las dependencias
+apply plugin: 'idea'
+
 // We are Java 8
 apply plugin: 'java'
 sourceCompatibility = 1.8
@@ -26,13 +29,10 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j"
-    }
 }
 
 dependencies {
     // Version is managed by io.spring.dependency-management
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile 'commons-validator:commons-validator:1.6'
+    compile "net.sourceforge.tess4j:tess4j:3.0.0"
 }

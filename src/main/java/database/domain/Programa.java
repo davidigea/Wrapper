@@ -1,4 +1,4 @@
-package database;
+package database.domain;
 
 import java.util.LinkedList;
 

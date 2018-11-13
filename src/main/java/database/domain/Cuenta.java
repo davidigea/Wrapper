@@ -1,4 +1,4 @@
-package database;
+package database.domain;
 
 /**
  * Clase que se corresponde con la cuenta de registros que hay en el servidor

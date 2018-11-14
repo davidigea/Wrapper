@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="sp">
+<head>
+    <title>Database</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="js/busqueda.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand" href="home.html">DATABASE</a>
+    <form id="formulario" name="formulario" class="form-inline">
+        <div class="input-group">
+            <select class="custom-select" id="opcion" name="opcion">
+                <option value="cinta" selected>Cinta</option>
+                <option value="programa">Programa</option>
+            </select>
+            <input type="text" id="texto" name="texto" class="form-control" placeholder="Escriba aquí" required>
+        </div>
+        <button class="btn btn-success" type="submit" onclick="return hacerBusqueda()">Buscar</button>
+    </form>
+</nav>
+<div class="container" style="width:100%; margin-left:10%; margin-right:10%;">
+    <div id="numRegistros"></div>
+    <div id="cadenaResultados"></div>
+    <script src="js/registros.js"></script>
+    <span id="contenido" style="display: flex;"></span>
+</div>
+</body>
+</html>

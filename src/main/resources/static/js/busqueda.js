@@ -19,9 +19,13 @@ function hacerBusqueda() {
     req.open("GET", url, false);
     req.send(null);
 
+
+    if(req.status == 404) {
+        alert("Los parámetros buscados no se corresponden con ninguna instancia de la base de datos");
+    }
     if(req.status != 200) {
         // La petición ha tenido algún error
-        alert("error");
+        alert("Error desconocido");
     }
     else {
         // La petición no ha tenido errores

@@ -18,6 +18,8 @@ public class Programa {
         this.cinta = cinta;
     }
 
+    public Programa() {}
+
     public int getNumRegistro() {
         return numRegistro;
     }

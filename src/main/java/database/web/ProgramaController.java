@@ -2,13 +2,13 @@ package database.web;
 
 
 import database.domain.Programa;
-import database.reader.Lector;
+import database.service.Lector;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.LinkedList;
 
 @RestController
 public class ProgramaController {
@@ -20,10 +20,13 @@ public class ProgramaController {
      * @return La cuenta de registros
      */
     @GetMapping(value = "/programa/{nombre}")
-    public Programa get(@PathVariable String nombre) throws Exception {
-        LinkedList<String> l = new LinkedList<String>();
-        l.add("D");
-        l.add("X");
-        return new Programa(1, nombre, "Humano", l);
+    public ResponseEntity<?> get(@PathVariable String nombre) throws Exception {
+        Programa p = l.getProgram(nombre);
+        if( p != null) {
+            return new ResponseEntity<>(p, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

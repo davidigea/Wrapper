@@ -34,5 +34,7 @@ repositories {
 dependencies {
     // Version is managed by io.spring.dependency-management
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile "net.sourceforge.tess4j:tess4j:3.0.0"
+    compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.0.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 }

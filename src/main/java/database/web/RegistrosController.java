@@ -2,12 +2,12 @@ package database.web;
 
 
 import database.domain.Cuenta;
-import database.reader.Lector;
+import database.service.Lector;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Random;
 
 @RestController
 public class RegistrosController {
@@ -19,7 +19,7 @@ public class RegistrosController {
      * @return La cuenta de registros
      */
     @GetMapping(value = "/numregistros")
-    public Cuenta get() throws Exception {
-        return l.getNumRegistros();
+    public ResponseEntity<?> get() throws Exception {
+        return new ResponseEntity<>(l.getNumRegistros(), HttpStatus.OK);
     }
 }

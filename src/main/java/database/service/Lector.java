@@ -63,80 +63,29 @@ public class Lector {
      *       contrario, devuelve null.
      */
     public synchronized Programa getProgram(String nombre) throws TesseractException, NumberFormatException, InterruptedException {
-        // Variables locales
-        BufferedImage capture;
+        ordenar(1); // ordenamos según la cinta
+        Thread.sleep(500);
+        entrarMenu6(nombre);
+        Thread.sleep(500); // Hacemos captura
+        String result = capturarPantalla();
 
-        // Entramos al menú correspondiente
-        pulsar('7');
-        pulsar('N');
-        pulsar('\n');
-
-        // Escribimos el nombre del programa
-        escribir(nombre);
-
-        // Le damos al enter
-        pulsar('\n');
-
-        Thread.sleep(2000);
-
-        // Obtenemos en texto lo que hay en pantalla
-        capture = robot.createScreenCapture(new Rectangle(X, Y, ANCHURA, ALTURA));
-        String result = ocr.doOCR(capture);
-
-        // Si no encuentra número, es que no existe el programa
-        int indice = skipPart(result, 0, (c) -> !Character.isDigit(c));
-
-        // Si no se ha encontrado un número significa que no existe el programa
-        if (indice == -1) {
-            // Volvemos al menú principal
-            pulsar('\n');
-            pulsar('N');
-            pulsar('\n');
-            Thread.sleep(500);
+        // Se comprueba si existe el programa
+        int indice = skipPart(result, 0, (c) -> !Character.isAlphabetic(c));
+        if (result.charAt(indice) == 'M') { // El id no existía
             return null;
         }
 
-        // El programa existe; leer los datos restantes
-        // Leemos el nº de registro
-        int oldIndex = indice;
-        indice = skipPart(result, indice, (c) -> Character.isDigit(c));
-        int numRegistro = Integer.parseInt(result.substring(oldIndex, indice));
-        indice = skipPart(result, indice, (c) -> !Character.isDigit(c) && !Character.isAlphabetic(c));
-
-        // Leemos el título
-        oldIndex = indice;
-        indice = skipUntil2Whitespaces(result, indice);
-        String titulo = result.substring(oldIndex, indice);
-        indice = skipPart(result, indice, (c) -> !Character.isDigit(c) && !Character.isAlphabetic(c));
-
-        // Leemos el tipo
-        oldIndex = indice;
-        indice = skipUntil2Whitespaces(result, indice);
-        String tipo = result.substring(oldIndex, indice);
-        indice = skipPart(result, indice, (c) -> c != ':');
-        indice++;
-
-        // Leemos las cintas
-        oldIndex = indice;
-        indice = skipPart(result, indice, (c) -> c != '\n');
-        String cintas = result.substring(oldIndex, indice);
-        LinkedList<String> listaCintas = new LinkedList<>();
-        Collections.addAll(listaCintas, cintas.split("-"));
-
-        // Salimos al menú principal
-        pulsar('S');
+        // El programa existe
+        Programa p = new Programa();
+        leerPrograma(result, indice, p);
         pulsar('\n');
-        pulsar('N');
-        pulsar('\n');
-        pulsar('N');
-        pulsar('\n');
-        Thread.sleep(250);
-        return new Programa(numRegistro, titulo, tipo, listaCintas);
+        return p;
     }
 
 
     public synchronized LinkedList<String> getProgramsById(String idCinta) throws TesseractException, NumberFormatException, InterruptedException {
         ordenar(3); // ordenamos según la cinta
+        Thread.sleep(500);
         entrarMenu6(idCinta);
         Thread.sleep(500); // Hacemos captura
         String result = capturarPantalla();
@@ -147,33 +96,37 @@ public class Lector {
             return null;
         }
 
-        // El ID existe: vamos a leer los programas
+        // El ID existe: leemos los programas de una página
         boolean leerPagina = true;
         LinkedList<Programa> progs = new LinkedList<>();
+        idCinta = idCinta.toUpperCase();
         while (leerPagina) {
-            boolean seguirBuscando = false;
+            boolean ultimoPerteneceCinta = false;
             for (int i = 0; i < PROGS_PER_PAGE; i++) {
-                seguirBuscando = false;
+                ultimoPerteneceCinta = false;
                 Programa p = new Programa();
                 indice = leerPrograma(result, indice, p);
-                if(indice == -1) {
+                if(indice == -1) { // Error, salimos
                     break;
                 }
                 for (String j : p.getCinta()) {
                     if (j.equals(idCinta)) {
-                        seguirBuscando = true;
                         progs.add(p);
+                        ultimoPerteneceCinta = true;
                     }
                 }
             }
-            // Avanzamos página o salimos
-            if (seguirBuscando) {
+            if(ultimoPerteneceCinta) { // Hacer captura
+                indice = 0;
                 pulsar(' ');
-            } else {
+                Thread.sleep(500);
+                result = capturarPantalla();
+            }
+            else {
                 leerPagina = false;
-                pulsar('\n');
             }
         }
+        pulsar('\n');
 
         // Ordenamos la lista según el registro
         progs.sort(Comparator.comparingInt(Programa::getNumRegistro));
@@ -198,7 +151,8 @@ public class Lector {
      */
     private void ordenar(int criterio) throws InterruptedException {
         if(orden != criterio) {
-            pulsar(String.valueOf(criterio).charAt(0));
+            orden = criterio;
+            pulsar('3');
             Thread.sleep(300);
             pulsar(String.valueOf(criterio).charAt(0));
             pulsar('\n');
@@ -259,12 +213,10 @@ public class Lector {
      */
     private int leerPrograma(String result, Integer indice, Programa p) {
         try {
-            // Descartamos hasta el primer nº
-            indice = skipPart(result, indice, (c) -> Character.isDigit(c));
-
-            // Descartamos el numero y los espacios
+            // Descartamos hasta el título
             indice = skipPart(result, indice, (c) -> !Character.isDigit(c));
-            indice = skipPart(result, indice, (c) -> c != ' ');
+            indice = skipPart(result, indice, (c) -> Character.isDigit(c));
+            indice = skipPart(result, indice, (c) -> !Character.isDigit(c) && !Character.isAlphabetic(c));
 
             // Leemos el título del programa
             int oldIndex = indice;

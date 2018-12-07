@@ -132,6 +132,6 @@ function mostrarPrograma(boton) {
         $("#contenido").append(presentacionPrograma(res));
     }
     else {
-        alert("error en mostrarPrograma: " + nombre);
+        alert("error en mostrarPrograma: " + boton.name);
     }
 }
